@@ -1,6 +1,6 @@
 n <- 100
 library(tidyverse)
-set.seed(26775)
+set.seed(1331)
 
 confounding <- tibble(
   z = rnorm(n),
@@ -8,7 +8,7 @@ confounding <- tibble(
   y = 0.5 * x + z + rnorm(n)
 )
 
-usethis::use_data(confounding)
+usethis::use_data(confounding, overwrite = TRUE)
 
 set.seed(472046)
 
