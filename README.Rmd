@@ -31,12 +31,24 @@ devtools::install_github("LucyMcGowan/causalquartet)
 ## Example
 
 ```{r}
-library(ggplot2)
+#| message: false
+#| warning: false
+library(tidyverse)
 library(causalquartet)
 
 ggplot(causalquartet, aes(x = x, y = y)) +
   geom_point() + 
   geom_smooth(method = "lm", formula = "y ~ x") +
   facet_wrap(~type)
+```
+
+```{r}
+causalquartet %>%
+  nest_by(type) %>%
+  mutate(`Y ~ X` = round(coef(lm(y ~ x, data = data))[2], 2),
+         `Y ~ X + Z` = round(coef(lm(y ~ x + z, data = data))[2], 2),
+         `Correlation of X and Z` = round(cor(data$x, data$z), 2)) %>%
+  select(-data, `Data generating mechanism` = type) %>%
+  knitr::kable()
 ```
 

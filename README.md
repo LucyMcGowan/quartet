@@ -24,7 +24,7 @@ devtools::install_github("LucyMcGowan/causalquartet)
 ## Example
 
 ``` r
-library(ggplot2)
+library(tidyverse)
 library(causalquartet)
 
 ggplot(causalquartet, aes(x = x, y = y)) +
@@ -34,3 +34,20 @@ ggplot(causalquartet, aes(x = x, y = y)) +
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
+``` r
+causalquartet %>%
+  nest_by(type) %>%
+  mutate(`Y ~ X` = round(coef(lm(y ~ x, data = data))[2], 2),
+         `Y ~ X + Z` = round(coef(lm(y ~ x + z, data = data))[2], 2),
+         `Correlation of X and Z` = round(cor(data$x, data$z), 2)) %>%
+  select(-data, `Data generating mechanism` = type) %>%
+  knitr::kable()
+```
+
+| Data generating mechanism | Y \~ X | Y \~ X + Z | Correlation of X and Z |
+|:--------------------------|-------:|-----------:|-----------------------:|
+| \(1\) Collider            |      1 |       0.55 |                    0.7 |
+| \(2\) Confounder          |      1 |       0.50 |                    0.7 |
+| \(3\) Mediator            |      1 |       0.00 |                    0.7 |
+| \(4\) M-Bias              |      1 |       0.88 |                    0.7 |

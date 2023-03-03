@@ -21,7 +21,7 @@ collider <- tibble(
 usethis::use_data(collider, overwrite = TRUE)
 
 
-set.seed(44433)
+set.seed(207052)
 
 mediator <- tibble(
   x = rnorm(n),
