@@ -18,7 +18,7 @@ collider <- tibble(
   z = 0.45 * x + 0.77 * y + rnorm(n)
 )
 
-usethis::use_data(collider)
+usethis::use_data(collider, overwrite = TRUE)
 
 
 set.seed(44433)
@@ -29,7 +29,7 @@ mediator <- tibble(
   y = z + rnorm(n)
 )
 
-usethis::use_data(mediator)
+usethis::use_data(mediator, overwrite = TRUE)
 
 
 set.seed(839)
@@ -42,9 +42,9 @@ m_bias <- tibble(
   y =  x + u2 + rnorm(n, sd = 1)
 )
 
-usethis::use_data(m_bias)
+usethis::use_data(m_bias, overwrite = TRUE)
 
 causalquartet <- bind_rows(confounding, collider, mediator, m_bias) %>%
   mutate(type = rep(c("(2) Confounder", "(1) Collider", "(3) Mediator", "(4) M-Bias"), each = 100))
 
-usethis::use_data(causalquartet)
+usethis::use_data(causalquartet, overwrite = TRUE)
