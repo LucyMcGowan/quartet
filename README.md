@@ -11,7 +11,9 @@ presented with an exposure, outcome, and some measured factors,
 statistics alone, whether summary statistics or data visualizations, are
 not sufficient to determine the appropriate causal estimate. Additional
 information about the data generating mechanism is needed in order to
-draw the correct conclusions.
+draw the correct conclusions. See [this
+paper](https://github.com/LucyMcGowan/writing-quartet/blob/main/manuscript.pdf)
+for details.
 
 ## Installation
 
