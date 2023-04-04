@@ -11,8 +11,8 @@ analysis practitioners and students learn key statistical insights in a
 hands-on manner. It contains:
 
 - Anscombe’s Quartet
-- Datasaurus Dozen
 - Causal Quartet
+- Datasaurus Dozen
 
 ## Installation
 
@@ -22,10 +22,45 @@ You can install the development version of quartet like so:
 devtools::install_github("LucyMcGowan/quartet")
 ```
 
+## Anscombe’s Quartet
+
+The goal of the `anscombe_quartet` data set is to help drive home the
+point that visualizing your data is important. Francis Anscombe
+generated these four datasets to demonstrate that statistical summary
+measures alone cannot capture the full relationship between two
+variables (here, `x` and `y`). Anscombe emphasized the importance of
+visualizing data prior to calculating summary statistics.
+
+- Dataset 1 has a linear relationship between `x` and `y`
+- Dataset 2 has shows a nonlinear relationship between `x` and `y`
+- Dataset 3 has a linear relationship between `x` and `y` with a single
+  outlier
+- Dataset 4 has shows no relationship between `x` and `y` with a single
+  outlier that serves as a high-leverage point.
+
+In each of the datasets the following statistical summaries hold: \*
+mean of `x`: 9 \* variance of `x`: 11 \* mean of `y`: 7.5 \* variance of
+y: 4.125 \* correlation between `x` and `y`: 0.816 \* linear regression
+between `x` and `y`: `y = 3 + 0.5x` \* $R^2$ for the regression: 0.67
+
+## Example
+
+``` r
+library(tidyverse)
+library(quartet)
+
+ggplot(anscombe_quartet, aes(x = x, y = y)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = "y ~ x") +
+  facet_wrap(~dataset)
+```
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
 ## Causal Quartet
 
-The goal of the `causalquartet` data set is to help drive home the point
-that when presented with an exposure, outcome, and some measured
+The goal of the `causal_quartet` data set is to help drive home the
+point that when presented with an exposure, outcome, and some measured
 factors, statistics alone, whether summary statistics or data
 visualizations, are not sufficient to determine the appropriate causal
 estimate. Additional information about the data generating mechanism is
@@ -36,16 +71,13 @@ for details.
 ## Example
 
 ``` r
-library(tidyverse)
-library(quartet)
-
 ggplot(causal_quartet, aes(x = x, y = y)) +
   geom_point() + 
   geom_smooth(method = "lm", formula = "y ~ x") +
   facet_wrap(~dataset)
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 ``` r
 causal_quartet %>%
@@ -63,6 +95,25 @@ causal_quartet %>%
 | \(2\) Confounder          |      1 |       0.50 |                    0.7 |
 | \(3\) Mediator            |      1 |       0.00 |                    0.7 |
 | \(4\) M-Bias              |      1 |       0.88 |                    0.7 |
+
+## Datasaurus Dozen
+
+Similar to Anscombe’s Quartet, the Datasaurus Dozen has additional data
+sets where the mean, variance, and Pearson’s correlation are identical,
+but visualizations demonstrate the large difference between datasets.
+This dataset is rexported from the
+[datasauRus](https://CRAN.R-project.org/package=datasauRus) R package.
+
+## Example
+
+``` r
+ggplot(datasaurus_dozen, aes(x = x, y = y)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = "y ~ x") +
+  facet_wrap(~dataset)
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 ## References
 

@@ -21,8 +21,9 @@ knitr::opts_chunk$set(
 The quartet package is a collection of datasets aimed to help data analysis practitioners and students learn key statistical insights in a hands-on manner. It contains:
 
 * Anscombe's Quartet
-* Datasaurus Dozen
 * Causal Quartet
+* Datasaurus Dozen
+
 
 ## Installation
 
@@ -105,6 +106,7 @@ ggplot(datasaurus_dozen, aes(x = x, y = y)) +
   geom_smooth(method = "lm", formula = "y ~ x") +
   facet_wrap(~dataset)
 ```
+
 ## References
 
 Anscombe, F. J. (1973). "Graphs in Statistical Analysis". American Statistician. 27 (1): 17–21. doi:10.1080/00031305.1973.10478966. JSTOR 2682899.
