@@ -7,10 +7,10 @@ anscombe_quartet <- anscombe |>
                names_pattern = "([xy])(\\d)") |>
   arrange(dataset) |>
   mutate(dataset = case_when(
-    dataset == 1 ~ "linear",
-    dataset == 2 ~ "nonlinear",
-    dataset == 3 ~ "outlier",
-    dataset == 4 ~ "leverage"
+    dataset == 1 ~ "(1) Linear",
+    dataset == 2 ~ "(2) Nonlinear",
+    dataset == 3 ~ "(3) Outlier",
+    dataset == 4 ~ "(4) Leverage"
   ))
 
 usethis::use_data(anscombe_quartet, overwrite = TRUE)
