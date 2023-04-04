@@ -10,4 +10,4 @@
 #' * `z`: a known factor (confounder)
 #' * `x`: exposure
 #' * `y`: outcome
-"confounding"
+"causal_confounding"

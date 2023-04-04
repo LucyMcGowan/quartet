@@ -10,4 +10,4 @@
 #' * `x`: exposure
 #' * `z`: a known factor (mediator)
 #' * `y`: outcome
-"mediator"
+"causal_mediator"

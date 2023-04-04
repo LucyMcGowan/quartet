@@ -15,4 +15,4 @@
 #' * `x`: exposure
 #' * `y`: outcome
 
-"m_bias"
+"causal_m_bias"

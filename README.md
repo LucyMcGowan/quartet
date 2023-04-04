@@ -1,33 +1,43 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# causalquartet
+# quartet
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of causalquartet is to help drive home the point that when
-presented with an exposure, outcome, and some measured factors,
-statistics alone, whether summary statistics or data visualizations, are
-not sufficient to determine the appropriate causal estimate. Additional
-information about the data generating mechanism is needed in order to
-draw the correct conclusions. See [this
-paper](https://github.com/LucyMcGowan/writing-quartet/blob/main/manuscript.pdf)
-for details.
+The quartet package is a collection of datasets aimed to help data
+analysis practitioners and students learn key statistical insights in a
+hands-on manner. It contains:
+
+- Anscombe’s Quartet
+- Datasaurus Dozen
+- Causal Quartet
 
 ## Installation
 
-You can install the development version of causalquartet like so:
+You can install the development version of quartet like so:
 
 ``` r
-devtools::install_github("LucyMcGowan/causalquartet)
+devtools::install_github("LucyMcGowan/quartet")
 ```
+
+## Causal Quartet
+
+The goal of the `causalquartet` data set is to help drive home the point
+that when presented with an exposure, outcome, and some measured
+factors, statistics alone, whether summary statistics or data
+visualizations, are not sufficient to determine the appropriate causal
+estimate. Additional information about the data generating mechanism is
+needed in order to draw the correct conclusions. See [this
+paper](https://github.com/LucyMcGowan/writing-quartet/blob/main/manuscript.pdf)
+for details.
 
 ## Example
 
 ``` r
 library(tidyverse)
-library(causalquartet)
+library(quartet)
 
 ggplot(causalquartet, aes(x = x, y = y)) +
   geom_point() + 

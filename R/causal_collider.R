@@ -11,4 +11,4 @@
 #' * `y`: outcome
 #' * `z`: a known factor (collider)
 
-"collider"
+"causal_collider"
