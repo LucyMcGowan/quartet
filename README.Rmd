@@ -32,6 +32,7 @@ You can install the development version of quartet like so:
 ``` r
 devtools::install_github("LucyMcGowan/quartet")
 ```
+
 ## Anscombe's Quartet
 
 The goal of the `anscombe_quartet` data set is to help drive home the point that visualizing your data is important. Francis Anscombe generated these four datasets to demonstrate that statistical summary measures alone cannot capture the full relationship between two variables (here, `x` and `y`). Anscombe emphasized the importance of visualizing data prior to calculating summary statistics.
