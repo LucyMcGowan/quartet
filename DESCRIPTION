@@ -1,12 +1,14 @@
-Package: causalquartet
+Package: quartet
 Type: Package
-Title: This package includes datasets to help teach causal inference
+Title: This package includes datasets to help teach statistics
 Version: 0.1.0
 Author: Lucy D'Agostino McGowan
 Maintainer: Lucy D'Agostino McGowan <lucydagostino@gmail.com>
 Description: In the spirit of Anscombe's quartet, this package includes datasets
-   that demonstrate why additional assumptions about the data generating mechanism
-   are needed when estimating causal effects.
+   that demonstrate the importance of visualizing your data, the importance of 
+   not relying on statistical summary measures alone, and why additional 
+   assumptions about the data generating mechanism are needed when estimating 
+   causal effects.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
