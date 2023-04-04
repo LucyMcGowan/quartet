@@ -12,7 +12,8 @@ Description: In the spirit of Anscombe's quartet, this package includes datasets
    assumptions about the data generating mechanism are needed when estimating 
    causal effects.
 License: MIT + file LICENSE
-URL: https://github.com/lucymcgowan/quartet
+URL: https://github.com/lucymcgowan/quartet,
+    https://lucymcgowan.github.io/quartet/
 BugReports: https://github.com/lucymcgowan/quartet/issues
 Encoding: UTF-8
 LazyData: true
