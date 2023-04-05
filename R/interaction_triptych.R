@@ -19,7 +19,7 @@
 #' @format A dataframe with 2700 rows and 5 variables:
 #'
 #' * `dataset`: ideal, floor, or smaller correlation at larger slope
-#' * `moderator`: low, medium, or high
+#' * `moderator`: a factor that potentially interacts with `x`, values: low, medium, or high
 #' * `x`
 #' * `y`
 "interaction_triptych"

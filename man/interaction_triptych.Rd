@@ -8,7 +8,7 @@
 A dataframe with 2700 rows and 5 variables:
 \itemize{
 \item \code{dataset}: ideal, floor, or smaller correlation at larger slope
-\item \code{moderator}: low, medium, or high
+\item \code{moderator}: a factor that potentially interacts with \code{x}, values: low, medium, or high
 \item \code{x}
 \item \code{y}
 }
