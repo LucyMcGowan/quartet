@@ -14,6 +14,8 @@ hands-on manner. It contains:
 - Causal Quartet
 - Datasaurus Dozen
 - Interaction Triptych
+- Rashomon Quartet
+- Gelman Variation and Heterogeneity Causal Quartets
 
 ## Installation
 
@@ -171,12 +173,182 @@ data-generating mechanisms can be vastly different.
 
 ``` r
 ggplot(interaction_triptych, aes(x, y)) +
-  geom_point(alpha = 0.1) +
-  geom_smooth(method = "lm", formula = "y ~ x", color = "cornflower blue") + 
+  geom_point(shape = "o") +
+  geom_smooth(method = "lm", formula = "y ~ x") + 
   facet_grid(dataset ~ moderator)
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
+## Rashomon Quartet
+
+This dataset demonstrates that model diagnostics alone (such as $R^2$
+and RMSE) do not tell the full story of a prediction model. Here, there
+are three predictors and one outcome. Models fit using a regression
+tree, linear regression, random forest, and neural network all yield the
+same $R^2$ and RMSE, but are finding different relationships between the
+predictors, as evidenced by the below partial dependence plots.
+
+``` r
+set.seed(1568)
+library(tidymodels)
+library(DALEXtra)
+```
+
+``` r
+rec <- recipe(y ~ ., data = rashomon_quartet_train)
+
+## Regression Tree
+
+wf_tree <- workflow() |>
+  add_recipe(rec) |>
+  add_model(
+    decision_tree(mode = "regression", engine = "rpart",
+                  tree_depth = 3, min_n = 250)
+  )
+
+tree <- fit(wf_tree, rashomon_quartet_train)
+exp_tree <- explain_tidymodels(
+  tree, 
+  data = rashomon_quartet_test[, -1], 
+  y = rashomon_quartet_test[, 1],
+  verbose = FALSE, 
+  label = "decision tree")
+
+## Linear Model
+
+wf_linear <- wf_tree |>
+  update_model(linear_reg())
+
+lin <- fit(wf_linear, rashomon_quartet_train)
+exp_lin <- explain_tidymodels(
+  lin, 
+  data = rashomon_quartet_test[, -1], 
+  y = rashomon_quartet_test[, 1],
+  verbose = FALSE, 
+  label = "linear regression")
+
+## Random Forest
+
+wf_rf <- wf_tree |>
+  update_model(rand_forest(mode = "regression", 
+                           engine = "randomForest", 
+                           trees = 100))
+
+rf <- fit(wf_rf, rashomon_quartet_train)
+exp_rf <- explain_tidymodels(
+  rf, 
+  data = rashomon_quartet_test[, -1], 
+  y = rashomon_quartet_test[, 1],
+  verbose = FALSE, 
+  label = "random forest")
+
+## Neural Network
+
+library(neuralnet)
+nn <- neuralnet(
+  y ~ ., 
+  data = rashomon_quartet_train, 
+  hidden = c(8, 4), 
+  threshold = 0.05)
+
+exp_nn <- explain_tidymodels(
+  nn, 
+  data = rashomon_quartet_test[, -1], 
+  y = rashomon_quartet_test[, 1],
+  verbose = FALSE, 
+  label = "neural network")
+```
+
+We can see that each of these models “perform” the same.
+
+``` r
+mp <- map(list(exp_tree, exp_lin, exp_rf, exp_nn), model_performance)
+tibble(
+  model = c("Decision tree", "Linear regression", "Random forest", "Neural network"),
+  R2 = map_dbl(mp, ~.x$measures$r2),
+  RMSE = map_dbl(mp, ~.x$measures$rmse)
+  ) |>
+  knitr::kable(digits = 2)
+```
+
+| model             |   R2 | RMSE |
+|:------------------|-----:|-----:|
+| Decision tree     | 0.73 | 0.35 |
+| Linear regression | 0.73 | 0.35 |
+| Random forest     | 0.73 | 0.35 |
+| Neural network    | 0.73 | 0.35 |
+
+But the way they fit to the actual predictors is quite different:
+
+``` r
+pd_tree <- model_profile(exp_tree, N=NULL)
+pd_lin <- model_profile(exp_lin, N=NULL)
+pd_rf <- model_profile(exp_rf, N=NULL)
+pd_nn <- model_profile(exp_nn, N=NULL)
+plot(pd_tree, pd_nn, pd_rf, pd_lin)
+```
+
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+## Gelman Variation and Heterogeneity Causal Quartets
+
+The first set of data `variation_causal_quartet` demonstrates that you
+can get the same average treatment effect despite variability across
+some pre-treatment characteristic (here called `z`).
+
+``` r
+ggplot(variation_causal_quartet, aes(x = z, y = y, color = factor(x))) + 
+  geom_point(alpha = 0.5) + 
+  facet_wrap(~ dataset) + 
+  labs(color = "exposure group")
+```
+
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
+
+``` r
+
+variation_causal_quartet |>
+  nest_by(dataset) |>
+  mutate(ATE = round(coef(lm(y ~ x, data = data))[2], 2)) |>
+  select(-data, dataset) |>
+  knitr::kable()
+```
+
+| dataset                        | ATE |
+|:-------------------------------|----:|
+| \(1\) Constant effect          | 0.1 |
+| \(2\) Low variation            | 0.1 |
+| \(3\) High variation           | 0.1 |
+| \(4\) Occasional large effects | 0.1 |
+
+The `heterogeneous_causal_quartet` demonstrates how you can observe the
+same causal effect under different patterns of treatment heterogenity.
+
+``` r
+ggplot(heterogeneous_causal_quartet, aes(x = z, y = y, color = factor(x))) + 
+  geom_point(alpha = 0.5) + 
+  facet_wrap(~ dataset) + 
+  labs(color = "exposure group")
+```
+
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="100%" />
+
+``` r
+
+heterogeneous_causal_quartet |>
+  nest_by(dataset) |>
+  mutate(ATE = round(coef(lm(y ~ x, data = data))[2], 2)) |>
+  select(-data, dataset) |>
+  knitr::kable()
+```
+
+| dataset                                    | ATE |
+|:-------------------------------------------|----:|
+| \(1\) Linear interaction                   | 0.1 |
+| \(2\) No effect then steady increase       | 0.1 |
+| \(3\) Plateau                              | 0.1 |
+| \(4\) Intermediate zone with large effects | 0.1 |
 
 ## References
 
@@ -184,9 +356,19 @@ Anscombe, F. J. (1973). “Graphs in Statistical Analysis”. American
 Statistician. 27 (1): 17–21. <doi:10.1080/00031305.1973.10478966>. JSTOR
 2682899.
 
+Biecek P, Baniecki H, Krzyziński M, Cook D (2023). Performance is not
+enough: the story of Rashomon’s quartet. Preprint arXiv:2302.13356v2.
+
 Davies R, Locke S, D’Agostino McGowan L (2022). *datasauRus: Datasets
 from the Datasaurus Dozen*. R package version 0.1.6,
 <https://CRAN.R-project.org/package=datasauRus>.
+
+Gelman, A., Hullman, J., & Kennedy, L. (2023). Causal quartets:
+Different ways to attain the same average treatment effect. arXiv
+preprint arXiv:2302.12878.
+
+Hullman J (2023). *causalQuartet: Create Causal Quartets for
+Interrogating Average Treatment Effects*. R package version 0.0.0.9000.
 
 Matejka, J., & Fitzmaurice, G. (2017). Same Stats, Different Graphs:
 Generating Datasets with Varied Appearance and Identical Statistics
