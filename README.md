@@ -13,6 +13,7 @@ hands-on manner. It contains:
 - Anscombe’s Quartet
 - Causal Quartet
 - Datasaurus Dozen
+- Interaction Triptych
 
 ## Installation
 
@@ -57,6 +58,25 @@ ggplot(anscombe_quartet, aes(x = x, y = y)) +
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
 
+``` r
+
+anscombe_quartet |>
+  group_by(dataset) |>
+  summarise(mean_x = mean(x),
+            var_x = var(x),
+            mean_y = mean(y),
+            var_y = var(y),
+            cor = cor(x, y)) |>
+  knitr::kable(digits = 2)
+```
+
+| dataset         | mean_x | var_x | mean_y | var_y |  cor |
+|:----------------|-------:|------:|-------:|------:|-----:|
+| \(1\) Linear    |      9 |    11 |    7.5 |  4.13 | 0.82 |
+| \(2\) Nonlinear |      9 |    11 |    7.5 |  4.13 | 0.82 |
+| \(3\) Outlier   |      9 |    11 |    7.5 |  4.12 | 0.82 |
+| \(4\) Leverage  |      9 |    11 |    7.5 |  4.12 | 0.82 |
+
 ## Causal Quartet
 
 The goal of the `causal_quartet` data set is to help drive home the
@@ -80,12 +100,12 @@ ggplot(causal_quartet, aes(x = x, y = y)) +
 <img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
 
 ``` r
-causal_quartet %>%
-  nest_by(dataset) %>%
+causal_quartet |>
+  nest_by(dataset) |>
   mutate(`Y ~ X` = round(coef(lm(y ~ x, data = data))[2], 2),
          `Y ~ X + Z` = round(coef(lm(y ~ x + z, data = data))[2], 2),
-         `Correlation of X and Z` = round(cor(data$x, data$z), 2)) %>%
-  select(-data, `Data generating mechanism` = dataset) %>%
+         `Correlation of X and Z` = round(cor(data$x, data$z), 2)) |>
+  select(-data, `Data generating mechanism` = dataset) |>
   knitr::kable()
 ```
 
@@ -115,6 +135,49 @@ ggplot(datasaurus_dozen, aes(x = x, y = y)) +
 
 <img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
+``` r
+
+datasaurus_dozen |>
+  group_by(dataset) |>
+  summarise(mean_x = mean(x),
+            var_x = var(x),
+            mean_y = mean(y),
+            var_y = var(y),
+            cor = cor(x, y)) |>
+  knitr::kable(digits = 2)
+```
+
+| dataset    | mean_x |  var_x | mean_y |  var_y |   cor |
+|:-----------|-------:|-------:|-------:|-------:|------:|
+| away       |  54.27 | 281.23 |  47.83 | 725.75 | -0.06 |
+| bullseye   |  54.27 | 281.21 |  47.83 | 725.53 | -0.07 |
+| circle     |  54.27 | 280.90 |  47.84 | 725.23 | -0.07 |
+| dino       |  54.26 | 281.07 |  47.83 | 725.52 | -0.06 |
+| dots       |  54.26 | 281.16 |  47.84 | 725.24 | -0.06 |
+| h_lines    |  54.26 | 281.10 |  47.83 | 725.76 | -0.06 |
+| high_lines |  54.27 | 281.12 |  47.84 | 725.76 | -0.07 |
+| slant_down |  54.27 | 281.12 |  47.84 | 725.55 | -0.07 |
+| slant_up   |  54.27 | 281.19 |  47.83 | 725.69 | -0.07 |
+| star       |  54.27 | 281.20 |  47.84 | 725.24 | -0.06 |
+| v_lines    |  54.27 | 281.23 |  47.84 | 725.64 | -0.07 |
+| wide_lines |  54.27 | 281.23 |  47.83 | 725.65 | -0.07 |
+| x_shape    |  54.26 | 281.23 |  47.84 | 725.22 | -0.07 |
+
+## Interaction Triptych
+
+This set of 3 datasets demonstrating that while the slopes estimated by
+a simple linear interaction model may be the same, the underlying
+data-generating mechanisms can be vastly different.
+
+``` r
+ggplot(interaction_triptych, aes(x, y)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm", formula = "y ~ x", color = "cornflower blue") + 
+  facet_grid(dataset ~ moderator)
+```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+
 ## References
 
 Anscombe, F. J. (1973). “Graphs in Statistical Analysis”. American
@@ -130,3 +193,7 @@ Generating Datasets with Varied Appearance and Identical Statistics
 through Simulated Annealing. CHI 2017 Conference proceedings: ACM SIGCHI
 Conference on Human Factors in Computing Systems. Retrieved from
 <https://www.autodesk.com/research/publications/same-stats-different-graphs>
+
+Rohrer, Julia M., and Ruben C. Arslan. “Precise answers to vague
+questions: Issues with interactions.” Advances in Methods and Practices
+in Psychological Science 4.2 (2021): 25152459211007368.

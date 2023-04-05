@@ -23,6 +23,7 @@ The quartet package is a collection of datasets aimed to help data analysis prac
 * Anscombe's Quartet
 * Causal Quartet
 * Datasaurus Dozen
+* Interaction Triptych
 
 
 ## Installation
@@ -63,6 +64,15 @@ ggplot(anscombe_quartet, aes(x = x, y = y)) +
   geom_point() + 
   geom_smooth(method = "lm", formula = "y ~ x") +
   facet_wrap(~dataset)
+
+anscombe_quartet |>
+  group_by(dataset) |>
+  summarise(mean_x = mean(x),
+            var_x = var(x),
+            mean_y = mean(y),
+            var_y = var(y),
+            cor = cor(x, y)) |>
+  knitr::kable(digits = 2)
 ```
 
 ## Causal Quartet 
@@ -83,12 +93,12 @@ ggplot(causal_quartet, aes(x = x, y = y)) +
 ```
 
 ```{r}
-causal_quartet %>%
-  nest_by(dataset) %>%
+causal_quartet |>
+  nest_by(dataset) |>
   mutate(`Y ~ X` = round(coef(lm(y ~ x, data = data))[2], 2),
          `Y ~ X + Z` = round(coef(lm(y ~ x + z, data = data))[2], 2),
-         `Correlation of X and Z` = round(cor(data$x, data$z), 2)) %>%
-  select(-data, `Data generating mechanism` = dataset) %>%
+         `Correlation of X and Z` = round(cor(data$x, data$z), 2)) |>
+  select(-data, `Data generating mechanism` = dataset) |>
   knitr::kable()
 ```
 
@@ -106,6 +116,26 @@ ggplot(datasaurus_dozen, aes(x = x, y = y)) +
   geom_point() + 
   geom_smooth(method = "lm", formula = "y ~ x") +
   facet_wrap(~dataset)
+
+datasaurus_dozen |>
+  group_by(dataset) |>
+  summarise(mean_x = mean(x),
+            var_x = var(x),
+            mean_y = mean(y),
+            var_y = var(y),
+            cor = cor(x, y)) |>
+  knitr::kable(digits = 2)
+```
+
+## Interaction Triptych
+
+This set of 3 datasets demonstrating that while the slopes estimated by a simple linear interaction model may be the same, the underlying data-generating mechanisms can be vastly different.
+
+```{r}
+ggplot(interaction_triptych, aes(x, y)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm", formula = "y ~ x", color = "cornflower blue") + 
+  facet_grid(dataset ~ moderator)
 ```
 
 ## References
@@ -116,3 +146,4 @@ Davies R, Locke S, D'Agostino McGowan L (2022). _datasauRus: Datasets from the D
 
 Matejka, J., & Fitzmaurice, G. (2017). Same Stats, Different Graphs: Generating Datasets with Varied Appearance and Identical Statistics through Simulated Annealing. CHI 2017 Conference proceedings: ACM SIGCHI Conference on Human Factors in Computing Systems. Retrieved from https://www.autodesk.com/research/publications/same-stats-different-graphs
 
+Rohrer, Julia M., and Ruben C. Arslan. "Precise answers to vague questions: Issues with interactions." Advances in Methods and Practices in Psychological Science 4.2 (2021): 25152459211007368.
