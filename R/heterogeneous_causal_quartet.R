@@ -12,6 +12,9 @@
 #' "true" causal effect.
 #'
 #' @references Gelman, A., Hullman, J., & Kennedy, L. (2023). Causal quartets: Different ways to attain the same average treatment effect. arXiv preprint arXiv:2302.12878.
+#'
+#' Hullman J (2023). _causalQuartet: Create Causal Quartets for Interrogating Average Treatment Effects_. R package version 0.0.0.9000.
+#'
 #' @format `heterogeneous_causal_quartet`: A dataframe with 88 rows and 4 variables:
 #'
 #' * `dataset`: The data generating mechanism
