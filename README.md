@@ -1,10 +1,18 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# quartet
+# quartet: Datasets to help teach statistics <img src="man/figures/logo.png" align="right" height="138" />
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/LucyMcGowan/quartet/workflows/R-CMD-check/badge.svg)](https://github.com/LucyMcGowan/quartet/actions)
 <!-- badges: end -->
+
+**Authors:** [Lucy D’Agostino
+McGowan](https://www.lucymcgowan.com/)<br/> **License:**
+[MIT](https://opensource.org/licenses/MIT)
+
+### NOTE: This package has moved here: <https://github.com/r-causal/quartets>
 
 The quartet package is a collection of datasets aimed to help data
 analysis practitioners and students learn key statistical insights in a
